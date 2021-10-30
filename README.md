@@ -96,3 +96,58 @@ cat /etc/resolv.conf
 ```
 
 Hasil dari file diatas, salin pada setiap node yang ada pada topologi agar node dapat tersambung dengan internet.
+
+## 🏷️ Prepare Tools: Sebelum lanjut ke nomor berikutnya pastikan meginstall semua tools dibawah
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node Alabasta dan Loguetown
+
+```
+apt-get update
+apt-get install nano
+apt-get install dnsutils -y
+apt-get install lynx -y
+```
+
+#### 🖥️ Node EniesLobby
+
+```
+apt-get update
+apt-get install nano
+apt-get install bind9 -y
+```
+
+### 🖥️ Node Water7
+
+```
+apt-get update
+apt-get install nano
+apt-get install bind9 -y
+```
+
+### 🖥️ Node Skypie
+
+- Install tools yang dibutuhkan pada seluruh soal
+
+```
+apt-get update
+apt-get install nano
+apt-get install bind9 -y
+apt-get install apache2 -y
+apt-get install php -y
+apt-get install libapache2-mod-php7.0
+```
+
+- Download isi website yang sudah disediakan pada soal dan simpan di root agar tidak hilang (**cukup satu kali dijalankan**)
+
+```
+apt-get install wget -y
+apt-get install unzip -y
+wget https://github.com/FeinardSlim/Praktikum-Modul-2-Jarkom/archive/refs/heads/main.zip
+unzip main.zip
+cd Praktikum-Modul-2-Jarkom-main/
+unzip franky.zip
+unzip general.mecha.franky.zip
+unzip super.franky.zip
+```

@@ -1540,3 +1540,81 @@ lynx http:///10.37.2.4
 ![image](https://user-images.githubusercontent.com/49280352/139538114-e7b85da5-730c-41b2-86e0-49db9cff6600.png)
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
+
+## 🏷️ Soal 17: Dikarenakan Franky juga ingin mengajak temannya untuk dapat menghubunginya melalui website www.super.franky.yyy.com, dan dikarenakan pengunjung web server pasti akan bingung dengan randomnya images yang ada, maka Franky juga meminta untuk mengganti request gambar yang memiliki substring “franky” akan diarahkan menuju franky.png. Maka bantulah Luffy untuk membuat konfigurasi dns dan web server ini!
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node Skypie
+
+- Buat file .htaccess untuk mengarahkan query request yang mengandung kalimat franky pada /public/images/{request} untuk membuka file franky.png
+
+```
+nano /var/www/super.franky.e16.com/.htaccess
+```
+
+```
+RewriteEngine On
+RewriteBase /var/www/super.franky.e16.com/public/images
+RewriteCond %{REQUEST_FILENAME} !franky.png
+RewriteRule (.*)franky(.*) http://super.franky.e16.com/public/images/franky.png
+```
+
+- Edit config super franky untuk menambah AllowOverride
+
+```
+<VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port t$
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        #ServerName www.example.com
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/super.franky.e16.com
+        ServerName super.franky.e16.com
+        ServerAlias www.super.franky.e16.com
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+	#LogLevel info ssl:warn
+	
+	Alias "/js" "/var/www/super.franky.e16.com/public/js"
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+	<Directory /var/www/super.franky.e16.com>
+                Options +Indexes
+		AllowOverride All
+        </Directory>
+
+        <Directory /var/www/super.franky.e16.com/public>
+                Options +Indexes
+        </Directory>
+	
+	<Directory /var/www/super.franky.e16.com/public/css>
+                Options -Indexes
+        </Directory>
+
+	ErrorDocument 404 /error/404.html
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+	#Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+```
+service apache2 restart
+```

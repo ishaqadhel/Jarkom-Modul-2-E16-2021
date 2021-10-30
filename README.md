@@ -669,3 +669,117 @@ ping www.general.mecha.franky.e16.com
 ![image](https://user-images.githubusercontent.com/49280352/139535560-78deefaa-9b51-4024-8bdc-7473ddaabe9a.png)
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
+
+## 🏷️ Soal 8: Setelah melakukan konfigurasi server, maka dilakukan konfigurasi Webserver. Pertama dengan webserver www.franky.yyy.com. Pertama, luffy membutuhkan webserver dengan DocumentRoot pada /var/www/franky.yyy.com.
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node EniesLobby
+
+- Edit bind data franky.e16.com dengan mengubah ip tujuan dari EnniesLobby ke Skypie
+
+```
+nano /etc/bind/kaizoku/franky.e16.com
+```
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     franky.e16.com. root.franky.e16.com. (
+                        2021102501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      franky.e16.com.
+@       IN      A       10.37.2.4 ;IP Skypie 
+www     IN      CNAME   franky.e16.com.
+super   IN      A       10.37.2.4 ;IP Skypie
+www.super       IN      CNAME   super.franky.e16.com.
+ns1     IN      A       10.37.2.3 ;IP Water7
+mecha   IN      NS      ns1
+```
+
+```
+service bind9 restart
+```
+
+#### 🖥️ Node Skypie
+
+- Jalankan Apache2
+
+```
+service apache2 start
+```
+
+- Buat config webserver untuk franky.e16.com pada sites-available
+
+```
+cd /etc/apache2/sites-available
+cp 000-default.conf www.franky.e16.com.conf
+nano /etc/apache2/sites-available/www.franky.e16.com.conf
+```
+
+```
+<VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port t$
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        #ServerName www.example.com
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/franky.e16.com
+				ServerName franky.e16.com
+        ServerAlias www.franky.e16.com
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+				ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+- Enable config dengan a2ensite dan copy isi website dari root yang telah diekstrak pada awal ke dalam /var/www/franky.e16.com
+
+```
+cd /etc/apache2/sites-available/
+a2ensite www.franky.e16.com.conf
+service apache2 restart
+cd
+cd Praktikum-Modul-2-Jarkom-main
+cp -r franky /var/www/franky.e16.com
+```
+
+### 👨‍💻 Testing:
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Buka website franky.yyy.com atau www.franky.yyy,com dengan lynx
+
+```
+lynx http://franky.e16.com
+lynx http://www.franky.e16.com
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139535911-e61c110b-f3cf-4755-98fc-1daf61b14f62.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil.

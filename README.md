@@ -229,3 +229,48 @@ ping www.franky.e16.com
 ![image](https://user-images.githubusercontent.com/49280352/139533320-ec139c22-1ba8-45dd-b4ec-88995dd878be.png)
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
+
+
+## 🏷️ Soal 3: Setelah itu buat subdomain super.franky.yyy.com dengan alias www.super.franky.yyy.com yang diatur DNS nya di EniesLobby dan mengarah ke Skypie
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node EniesLobby
+
+- Edit bind data file pada folder kaizoku dengan menaruh super.franky.yyy.com serta aliasnya
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     franky.e16.com. root.franky.e16.com. (
+                        2021102501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      franky.e16.com.
+@       IN      A       10.37.2.2 ;IP EniesLobby
+www     IN      CNAME   franky.e16.com.
+super   IN      A       10.37.2.4 ;IP Skypie
+www.super       IN      CNAME   super.franky.e16.com.
+```
+
+```
+service bind9 restart
+```
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Test franky.e16.com dan www.franky.e16.com menggunakan ping
+
+```
+ping super.franky.e16.com
+ping www.super.franky.e16.com
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139533499-fc159676-ebc6-4552-b3d5-422d6091b2c6.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil.

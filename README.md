@@ -207,6 +207,8 @@ www     IN      CNAME   franky.e16.com.
 service bind9 restart
 ```
 
+### 👨‍💻 Testing:
+
 #### 🖥️ Node Loguetown atau Alabasta
 
 - Ubah resolve.conf dengan menambahkan ip enieslobby
@@ -261,6 +263,8 @@ www.super       IN      CNAME   super.franky.e16.com.
 ```
 service bind9 restart
 ```
+
+### 👨‍💻 Testing:
 
 #### 🖥️ Node Loguetown atau Alabasta
 
@@ -331,6 +335,8 @@ $TTL    604800
 ```
 service bind9 restart
 ```
+
+### 👨‍💻 Testing:
 
 #### 🖥️ Node Loguetown atau Alabasta
 
@@ -407,6 +413,8 @@ zone "franky.e16.com" {
 ```
 service bind9 restart
 ```
+
+### 👨‍💻 Testing:
 
 #### 🖥️ Node Loguetown atau Alabasta
 

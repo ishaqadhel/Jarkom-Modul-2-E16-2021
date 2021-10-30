@@ -1442,6 +1442,8 @@ nano /etc/apache2/sites-available/www.general.mecha.franky.e16.com-15500.conf
 service apache2 restart
 ```
 
+### 👨‍💻 Testing:
+
 #### 🖥️ Node Loguetown atau Alabasta
 
 - Buka website general.mecha.franky.e16.com www.general.mecha.franky.e16.com dengan port 15000 dan 15500 menggunakan lynx
@@ -1457,5 +1459,84 @@ lynx http://www.general.mecha.franky.e16.com:15500
 ![image](https://user-images.githubusercontent.com/49280352/139537674-1861f00f-59a5-496f-ab62-8d15d199bb6d.png)
 
 ![image](https://user-images.githubusercontent.com/49280352/139537685-c8289515-3514-4a08-b4b7-384e76db6b22.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil.
+
+## 🏷️ Soal 16: Dan setiap kali mengakses IP Skypie akan dialihkan secara otomatis ke www.franky.yyy.com
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node Skypie
+
+- gunakan a2enmod rewrite untuk enable modul rewrite untuk apache dan buatlah htaccess di directory website franky.yyy.com
+
+```
+a2enmod rewrite
+nano /var/www/franky.e16.com/.htaccess
+```
+
+```
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTP_HOST} ^10\.37\.2\.4$
+RewriteRule ^(.*)$ http://www.franky.e16.com/$1 [L,R=301]
+```
+
+- Buka config 000-default untuk menambahkan Redirect 301 menuju http://www.franky.e16.com yang artinya jika website dikunjungi user akan di redirect permanent ke http://www.franky.e16.com . Disini saya menggunakan Redirect 301 karena method pada website yang ada adalah GET. Untuk POST dianjurkan menggunakan 308.
+
+```
+nano /etc/apache2/sites-available/000-default.conf
+```
+
+```
+<VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port t$
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        #ServerName www.example.com
+
+        Redirect 301 / http://www.franky.e16.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+```
+service apache2 restart
+```
+
+### 👨‍💻 Testing:
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Buka website dengan direct ip http://10.37.2.4 menggunakan lynx kemudian pada saat terbuka type "=" pada keyboard untuk membuka sites detail apakah url sudah benar di forward ke http://www.franky.e16.com/
+
+```
+lynx http:///10.37.2.4
+
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139538114-e7b85da5-730c-41b2-86e0-49db9cff6600.png)
 
 Jika hasil seperti gambar diatas maka sudah berhasil.

@@ -274,3 +274,72 @@ ping www.super.franky.e16.com
 ![image](https://user-images.githubusercontent.com/49280352/139533499-fc159676-ebc6-4552-b3d5-422d6091b2c6.png)
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
+
+## 🏷️ Soal 4: Buat juga reverse domain untuk domain utama
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node EniesLobby
+
+- Edit Config local dengan menaruh 2.37.10.in-addr.arpa dengan type master dan directory bind data dalam folder kaizoku/2.37.10.in-addr.arpa
+
+```
+nano /etc/bind/named.conf.local
+```
+
+```
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+zone "franky.e16.com" {
+        type master;
+        file "/etc/bind/kaizoku/franky.e16.com";
+};
+zone "2.37.10.in-addr.arpa" {
+    type master;
+    file "/etc/bind/kaizoku/2.37.10.in-addr.arpa";
+};
+```
+
+- Buat file bind data untuk 2.37.10.in-addr.arpa dan arahkan ke PTR ke 2 / IP EniesLobby
+
+```
+cp /etc/bind/db.local /etc/bind/kaizoku/2.37.10.in-addr.arpa
+nano /etc/bind/kaizoku/2.37.10.in-addr.arpa
+```
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     franky.e16.com. root.franky.e16.com. (
+                        2021102501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+2.37.10.in-addr.arpa.   IN      NS      franky.e16.com.
+2       IN      PTR     franky.e16.com.
+```
+
+```
+service bind9 restart
+```
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Test reverse dengan host -t PTR mengarah ke IP EniesLobby
+
+```
+host -t PTR 10.37.2.2
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139533649-6272ce9f-722b-4623-83bd-3c60d0c76081.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil.

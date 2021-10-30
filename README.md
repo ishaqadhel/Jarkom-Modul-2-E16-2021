@@ -617,3 +617,55 @@ ping www.mecha.franky.e16.com
 ![image](https://user-images.githubusercontent.com/49280352/139534453-08857997-4563-4e28-b171-42dbce2950de.png)
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
+
+
+## 🏷️ Soal 7: Untuk memperlancar komunikasi Luffy dan rekannya, dibuatkan subdomain melalui Water7 dengan nama general.mecha.franky.yyy.com dengan alias www.general.mecha.franky.yyy.com yang mengarah ke Skypie
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node Water7
+
+- Edit bind data mecha.franky.e16.com dengan menambahkan subdomain general.mecha.franky.yyy.com dan www.general.mecha.franky.yyy.com
+
+```
+nano /etc/bind/sunnygo/mecha.franky.e16.com
+```
+
+```
+
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     mecha.franky.e16.com. root.mecha.franky.e16.com. (
+                        2021102501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      mecha.franky.e16.com.
+@       IN      A       10.37.2.4 ;IP Skypie
+www       IN      CNAME   mecha.franky.e16.com.
+general IN      A       10.37.2.4 ;IP Skypie
+www.general     IN      CNAME   general.mecha.franky.e16.com.
+```
+
+```
+service bind9 restart
+```
+
+### 👨‍💻 Testing:
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Test general.mecha.franky.yyy.com dan alias www.general.mecha.franky.e16.com dengan menggunakan ping
+
+```
+ping general.mecha.franky.e16.com
+ping www.general.mecha.franky.e16.com
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139535560-78deefaa-9b51-4024-8bdc-7473ddaabe9a.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil.

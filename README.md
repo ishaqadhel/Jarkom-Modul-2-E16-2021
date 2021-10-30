@@ -118,7 +118,7 @@ apt-get install nano
 apt-get install bind9 -y
 ```
 
-### 🖥️ Node Water7
+#### 🖥️ Node Water7
 
 ```
 apt-get update
@@ -126,7 +126,7 @@ apt-get install nano
 apt-get install bind9 -y
 ```
 
-### 🖥️ Node Skypie
+#### 🖥️ Node Skypie
 
 - Install tools yang dibutuhkan pada seluruh soal
 
@@ -151,3 +151,81 @@ unzip franky.zip
 unzip general.mecha.franky.zip
 unzip super.franky.zip
 ```
+
+## 🏷️ Soal 2: Luffy ingin menghubungi Franky yang berada di EniesLobby dengan denden mushi. Kalian diminta Luffy untuk membuat website utama dengan mengakses franky.yyy.com dengan alias www.franky.yyy.com pada folder kaizoku 
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node EniesLobby
+
+- Edit Config local dengan menaruh franky.yyy.com dengan type master dan directory bind data dalam folder kaizoku/franky.yyy.com
+
+```
+nano /etc/bind/named.conf.local
+```
+
+```
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+zone "franky.e16.com" {
+        type master;
+        file "/etc/bind/kaizoku/franky.e16.com";
+};
+```
+
+- Buat bind data file pada folder kaizoku dengan menaruh franky.yyy.com serta aliasnya
+
+```
+mkdir /etc/bind/kaizoku
+cp /etc/bind/db.local /etc/bind/kaizoku/franky.e16.com
+nano /etc/bind/kaizoku/franky.e16.com
+```
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     franky.e16.com. root.franky.e16.com. (
+                        2021102501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      franky.e16.com.
+@       IN      A       10.37.2.2 ;IP EniesLobby
+www     IN      CNAME   franky.e16.com.
+```
+
+```
+service bind9 restart
+```
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Ubah resolve.conf dengan menambahkan ip enieslobby
+
+```
+nano /etc/resolv.conf
+```
+
+```
+nameserver 10.37.2.2
+```
+
+- Test franky.e16.com dan www.franky.e16.com menggunakan ping
+
+```
+ping franky.e16.com
+ping www.franky.e16.com
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139533320-ec139c22-1ba8-45dd-b4ec-88995dd878be.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil.

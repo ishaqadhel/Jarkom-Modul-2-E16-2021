@@ -926,3 +926,88 @@ lynx http://www.super.franky.e16.com
 ![image](https://user-images.githubusercontent.com/49280352/139536225-30f4eb34-9420-449e-ba6e-3e3830e67e85.png)
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
+
+## 🏷️ Soal 11: Akan tetapi, pada folder /public, Luffy ingin hanya dapat melakukan directory listing saja.
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node Skypie
+
+- Edit config super.franky.e16.com di sites-available dengan menambah beberapa rules untuk directory listing menggunakan Option -Indexes untuk disable explore folder dibawah public
+
+```
+nano /etc/apache2/sites-available/www.super.franky.e16.com.conf
+```
+
+```
+<VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port t$
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        #ServerName www.example.com
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/super.franky.e16.com
+        ServerName super.franky.e16.com
+        ServerAlias www.super.franky.e16.com
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+	#LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+	<Directory /var/www/super.franky.e16.com>
+                Options +Indexes
+        </Directory>
+	
+	<Directory /var/www/super.franky.d09.com/public/*>
+        	Options -Indexes
+	</Directory>
+
+        <Directory /var/www/super.franky.e16.com/public>
+                Options +Indexes
+        </Directory>
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+	#Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+```
+service apache2 restart
+```
+
+### 👨‍💻 Testing:
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Buka website super.franky.C13.com/public.comatau www.super.franky.C13.com/public dengan lynx
+
+```
+lynx http://super.franky.e16.com/public
+lynx http://www.super.franky.e16.com/public
+```
+
+- Untuk hasil /public
+
+![image](https://user-images.githubusercontent.com/49280352/139536507-2c4696e4-a779-4d2f-ba41-c4447e478d6d.png)
+
+- Ketika membuka folder /public/*
+
+![image](https://user-images.githubusercontent.com/49280352/139536566-5b90851b-bd28-446f-8df2-1ee7ce26af1b.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil.

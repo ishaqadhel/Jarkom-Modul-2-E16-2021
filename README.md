@@ -343,3 +343,92 @@ host -t PTR 10.37.2.2
 ![image](https://user-images.githubusercontent.com/49280352/139533649-6272ce9f-722b-4623-83bd-3c60d0c76081.png)
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
+
+## 🏷️ Soal 5: Supaya tetap bisa menghubungi Franky jika server EniesLobby rusak, maka buat Water7 sebagai DNS Slave untuk domain utama
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node EniesLobby
+
+- Edit Config local dengan menambah pada zone franky.yyy.com dengan enable notify, also-notify, allow-transfer untuk memberikan akses kepada DNS Slave (Water7)
+
+```
+nano /etc/bind/named.conf.local
+```
+
+```
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+zone "franky.e16.com" {
+    type master;
+    notify yes;
+    also-notify { 10.37.2.3; }; // Masukan IP Water7 tanpa tanda petik
+    allow-transfer { 10.37.2.3; }; // Masukan IP Water7 tanpa tanda petik
+    file "/etc/bind/kaizoku/franky.e16.com";
+};
+zone "2.37.10.in-addr.arpa" {
+    type master;
+    file "/etc/bind/kaizoku/2.37.10.in-addr.arpa";
+};
+```
+
+```
+service bind9 restart
+```
+
+#### 🖥️ Node Water7
+
+- Edit Config local dengan menambah zone franky.yyy.com dengan enable type slave, master berisi IP DNS asalnya / masternya, dan file config dalam bind
+
+```
+nano /etc/bind/named.conf.local
+```
+
+```
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+zone "franky.e16.com" {
+    type slave;
+    masters { 10.37.2.2; }; // Masukan IP EniesLobby tanpa tanda petik
+    file "/var/lib/bind/franky.e16.com";
+};
+```
+
+```
+service bind9 restart
+```
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Ubah resolve.conf dengan menambahkan ip enieslobby dan water7
+
+```
+nano /etc/resolv.conf
+```
+
+```
+nameserver 10.37.2.2
+nameserver 10.37.2.3
+```
+
+- Test franky.yyy.com dan www.franky.yyy.com  dengan kondisi bind9 mati pada EniesLobby dengan command ```service bind9 stop``` pada EniesLobby
+
+```
+ping franky.e16.com
+ping www.franky.e16.com
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139533929-e1bbbb6f-44e3-4928-ae37-b2cc004d6fd0.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil, **jangan lupa nyalain bind9 di node EniesLobby nya lagi ya gais**.
+

@@ -432,3 +432,180 @@ ping www.franky.e16.com
 
 Jika hasil seperti gambar diatas maka sudah berhasil, **jangan lupa nyalain bind9 di node EniesLobby nya lagi ya gais**.
 
+## 🏷️ Soal 6: Setelah itu terdapat subdomain mecha.franky.yyy.com dengan alias www.mecha.franky.yyy.com yang didelegasikan dari EniesLobby ke Water7 dengan IP menuju ke Skypie dalam folder sunnygo
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node EniesLobby
+
+- Edit data bind franky.yyy.com dengan menambahkan nameserver baru mengarah IP Water7 dengan domain mecha
+
+```
+nano /etc/bind/kaizoku/franky.e16.com
+```
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     franky.e16.com. root.franky.e16.com. (
+                        2021102501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      franky.e16.com.
+@       IN      A       10.37.2.2 ;IP EniesLobby
+www     IN      CNAME   franky.e16.com.
+super   IN      A       10.37.2.4 ;IP Skypie
+www.super       IN      CNAME   super.franky.e16.com.
+ns1     IN      A       10.37.2.3 ;IP Water7
+mecha   IN      NS      ns1
+```
+
+- Edit file option bind dengan comment  //dnssec-validation auto; dan menambahkan allow-query{any;}; untuk mengizinkan server lain melakukan query pada bind EniesLobby 
+
+```
+nano /etc/bind/named.conf.options
+```
+
+```
+options {
+        directory "/var/cache/bind";
+
+        // If there is a firewall between you and nameservers you want
+        // to talk to, you may need to fix the firewall to allow multiple
+        // ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+        // If your ISP provided one or more IP addresses for stable
+        // nameservers, you probably want to use them as forwarders.
+        // Uncomment the following block, and insert the addresses replacing
+        // the all-0's placeholder.
+
+        // forwarders {
+        //      0.0.0.0;
+        // };
+
+        //=====================================================================$
+        // If BIND logs error messages about the root key being expired,
+        // you will need to update your keys.  See https://www.isc.org/bind-keys
+	//=====================================================================$
+	//dnssec-validation auto;
+	allow-query{any;};
+
+	auth-nxdomain no;    # conform to RFC1035
+	listen-on-v6 { any; };
+	};
+```
+
+```
+service bind9 restart
+```
+
+#### 🖥️ Node Water7
+
+- Edit file option bind dengan comment  //dnssec-validation auto; dan menambahkan allow-query{any;}; untuk mengizinkan server lain melakukan query pada bind Water7 
+
+```
+nano /etc/bind/named.conf.options
+```
+
+```
+options {
+        directory "/var/cache/bind";
+
+        // If there is a firewall between you and nameservers you want
+        // to talk to, you may need to fix the firewall to allow multiple
+        // ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+        // If your ISP provided one or more IP addresses for stable
+        // nameservers, you probably want to use them as forwarders.
+        // Uncomment the following block, and insert the addresses replacing
+        // the all-0's placeholder.
+
+        // forwarders {
+        //      0.0.0.0;
+        // };
+
+        //=====================================================================$
+        // If BIND logs error messages about the root key being expired,
+        // you will need to update your keys.  See https://www.isc.org/bind-keys
+	//=====================================================================$
+	//dnssec-validation auto;
+	allow-query{any;};
+
+	auth-nxdomain no;    # conform to RFC1035
+	listen-on-v6 { any; };
+	};
+```
+
+- Edit config bind local dengan menambahkan zone mecha.franky.e16.com dengan type master dan bind data di /etc/bind/sunnygo/mecha.franky.e16.com
+
+```
+nano /etc/bind/named.conf.local
+```
+
+```
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+zone "franky.e16.com" {
+    type slave;
+    masters { 10.37.2.2; }; // Masukan IP EniesLobby tanpa tanda petik
+    file "/var/lib/bind/franky.e16.com";
+};
+zone "mecha.franky.e16.com" {
+        type master;
+        file "/etc/bind/sunnygo/mecha.franky.e16.com";
+};
+```
+
+- Buat file bind data di folder sunnygo dengan berisi mecha.franky.yyy.com dan alias www.mecha.franky.yyy.com
+
+```
+mkdir /etc/bind/sunnygo
+cp /etc/bind/db.local /etc/bind/sunnygo/mecha.franky.e16.com
+nano /etc/bind/sunnygo/mecha.franky.e16.com
+```
+
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     mecha.franky.e16.com. root.mecha.franky.e16.com. (
+                        2021102501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      mecha.franky.e16.com.
+@       IN      A       10.37.2.4 ;IP Skypie
+www     IN      CNAME   mecha.franky.e16.com.
+```
+
+```
+service bind9 restart
+```
+
+### 👨‍💻 Testing:
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Test mecha.franky.yyy.com dan alias www.mecha.franky.e16.com dengan menggunakan ping
+
+```
+ping mecha.franky.e16.com
+ping www.mecha.franky.e16.com
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139534453-08857997-4563-4e28-b171-42dbce2950de.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil.

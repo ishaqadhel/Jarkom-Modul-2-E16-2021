@@ -852,3 +852,77 @@ lynx http://www.franky.e16.com/home
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
 
+## 🏷️ Soal 10: Setelah itu, pada subdomain www.super.franky.yyy.com, Luffy membutuhkan penyimpanan aset yang memiliki DocumentRoot pada /var/www/super.franky.yyy.com
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node Skypie
+
+- Buat config webserver baru untuk super.franky.e16.com pada sites-available apache
+
+```
+cd /etc/apache2/sites-available
+cp 000-default.conf www.super.franky.e16.com.conf
+nano /etc/apache2/sites-available/www.super.franky.e16.com.conf
+```
+
+```
+<VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port t$
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        #ServerName www.example.com
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/super.franky.e16.com
+        ServerName super.franky.e16.com
+        ServerAlias www.super.franky.e16.com
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+				#LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+				#Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+- Enable config dengan a2ensite dan copy isi website super.franky dari requirement pada soal yang sudah diekstrak pada awal
+
+```
+a2ensite www.super.franky.e16.com.conf
+service apache2 restart
+cd
+cd Praktikum-Modul-2-Jarkom-main
+cp -r super.franky /var/www/super.franky.e16.com
+```
+
+### 👨‍💻 Testing:
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Buka website super.franky.e16.comatau www.super.franky.e16.com dengan lynx
+
+```
+lynx http://super.franky.e16.com
+lynx http://www.super.franky.e16.com
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139536225-30f4eb34-9420-449e-ba6e-3e3830e67e85.png)
+
+Jika hasil seperti gambar diatas maka sudah berhasil.

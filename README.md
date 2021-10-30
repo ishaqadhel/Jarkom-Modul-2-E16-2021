@@ -1179,7 +1179,7 @@ lynx http://www.super.franky.e16.com/js
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
 
-## 🏷️ Soal 13: Dan Luffy meminta untuk web www.general.mecha.franky.yyy.com hanya bisa diakses dengan port 15000 dan port 15500
+## 🏷️ Soal 14: Dan Luffy meminta untuk web www.general.mecha.franky.yyy.com hanya bisa diakses dengan port 15000 dan port 15500
 
 ### ✍️ Langkah-Langkah Pengerjaan:
 
@@ -1326,5 +1326,136 @@ lynx http://www.general.mecha.franky.e16.com:15500
 
 ![image](https://user-images.githubusercontent.com/49280352/139537531-3be49e69-d0de-4d96-80bc-696b2dd4b8f1.png)
 
+
+Jika hasil seperti gambar diatas maka sudah berhasil.
+
+## 🏷️ Soal 15: dengan autentikasi username luffy dan password onepiece dan file di /var/www/general.mecha.franky.yyy
+
+### ✍️ Langkah-Langkah Pengerjaan:
+
+#### 🖥️ Node Skypie
+
+- Buat user dan password menggunakan htpasswd dengan user luffy password onepiece
+
+```
+cd
+htpasswd -c /etc/apache2/.htpasswd luffy
+```
+
+- Edit Config untuk www.general.mecha.franky.e16.com:15000 dan www.general.mecha.franky.e16.com-15500 dengan menambahkan rules auth
+
+```
+nano /etc/apache2/sites-available/www.general.mecha.franky.e16.com-15000.conf
+```
+
+```
+<VirtualHost *:15000>
+        # The ServerName directive sets the request scheme, hostname and port t$
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        #ServerName www.example.com
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/general.mecha.franky.e16.com
+        ServerName general.mecha.franky.e16.com
+        ServerAlias www.general.mecha.franky.e16.com
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+				#LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+				<Directory "var/www/general.mecha.franky.e16.com">
+                AuthType Basic
+                AuthName "Restricted Content"
+                AuthUserFile /etc/apache2/.htpasswd
+                Require valid-user
+        </Directory>
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+				#Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+```
+nano /etc/apache2/sites-available/www.general.mecha.franky.e16.com-15500.conf
+```
+
+```
+<VirtualHost *:15500>
+        # The ServerName directive sets the request scheme, hostname and port t$
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        #ServerName www.example.com
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/general.mecha.franky.e16.com
+        ServerName general.mecha.franky.e16.com
+        ServerAlias www.general.mecha.franky.e16.com
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+				#LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+				<Directory "var/www/general.mecha.franky.e16.com">
+                AuthType Basic
+                AuthName "Restricted Content"
+                AuthUserFile /etc/apache2/.htpasswd
+                Require valid-user
+        </Directory>
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+				#Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+```
+service apache2 restart
+```
+
+#### 🖥️ Node Loguetown atau Alabasta
+
+- Buka website general.mecha.franky.e16.com www.general.mecha.franky.e16.com dengan port 15000 dan 15500 menggunakan lynx
+
+```
+lynx http://super.franky.e16.com:15000
+lynx http://super.franky.e16.com:15500
+lynx http://www.general.mecha.franky.e16.com:15000
+lynx http://www.general.mecha.franky.e16.com:15500
+
+```
+
+![image](https://user-images.githubusercontent.com/49280352/139537674-1861f00f-59a5-496f-ab62-8d15d199bb6d.png)
+
+![image](https://user-images.githubusercontent.com/49280352/139537685-c8289515-3514-4a08-b4b7-384e76db6b22.png)
 
 Jika hasil seperti gambar diatas maka sudah berhasil.
